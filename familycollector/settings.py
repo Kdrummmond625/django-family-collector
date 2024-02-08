@@ -12,6 +12,13 @@ https://docs.djangoproject.com/en/5.0/ref/settings/
 
 from pathlib import Path
 from datetime import timedelta
+import environ  
+import dj_database_url
+import django_heroku
+
+# Initialise environment variables
+env = environ.Env()
+environ.Env.read_env()
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -26,7 +33,10 @@ SECRET_KEY = 'django-insecure-#ge)+!t(e4p@(q^bt%cdq9o=+=^i@-l-*&8!38@-3br-nw&czu
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['localhost', '127.0.0.1']
+ALLOWED_HOSTS = ['localhost', '127.0.0.1', '.herokuapp.com']
+
+DATABASE_URL=env('DATABASE_URL')
+SECRET_KEY=env('SECRET_KEY')
 
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:3000",
@@ -49,6 +59,7 @@ INSTALLED_APPS = [
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+    "whitenoise.middleware.WhiteNoiseMiddleware",
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -82,15 +93,22 @@ WSGI_APPLICATION = 'familycollector.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/5.0/ref/settings/#databases
 
+# DATABASES = {
+#     'default': {
+#        'ENGINE': 'django.db.backends.postgresql',
+#         'NAME': 'familycollector',
+#         'USER': 'family_admin',
+#         'PASSWORD': 'password',
+#         'HOST': 'localhost',
+#     }
+# }
+# catcollector/settings.py
+
 DATABASES = {
-    'default': {
-       'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'familycollector',
-        'USER': 'family_admin',
-        'PASSWORD': 'password',
-        'HOST': 'localhost',
-    }
+    'default': 
+        dj_database_url.config('DATABASE_URL')
 }
+
 
 
 # Password validation
@@ -158,3 +176,10 @@ SIMPLE_JWT = {
     'AUTH_TOKEN_CLASSES': ('rest_framework_simplejwt.tokens.AccessToken',),
     'TOKEN_TYPE_CLAIM': 'token_type',
 }
+
+# catcollector/settings.py
+
+# Add this to the very bottom of your settings.py file
+# If you don't your app will not deploy properly
+django_heroku.settings(locals())
+
