@@ -1,4 +1,5 @@
 from django.db import models
+from django.contrib.auth.models import User
 
 # Create your models here.
 EVENTS = (
@@ -11,16 +12,6 @@ EVENTS = (
     ('O', 'Other')
 )
 
-
-class FamilyMember(models.Model):
-    first_name = models.CharField(max_length=100)
-    last_name = models.CharField(max_length=100)
-    birth_date = models.DateField()
-    age = models.IntegerField()
-
-    def __str__(self):
-        return f"{self.first_name} {self.last_name} was born on {self.birth_date}"
-    
 class Comment(models.Model):
     title = models.CharField(max_length=100)
     contents = models.TextField(blank=True)
@@ -28,6 +19,18 @@ class Comment(models.Model):
 
     def __str__(self):
         return self.title
+    
+class FamilyMember(models.Model):
+    first_name = models.CharField(max_length=100)
+    last_name = models.CharField(max_length=100)
+    birth_date = models.DateField()
+    age = models.IntegerField()
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    comments = models.ManyToManyField(Comment)
+
+
+    def __str__(self):
+        return f"{self.first_name} {self.last_name} was born on {self.birth_date}"
 
 class LifeEvent(models.Model):
     family_member = models.ForeignKey(FamilyMember, on_delete=models.CASCADE)
@@ -39,7 +42,6 @@ class LifeEvent(models.Model):
         )
     event_date = models.DateField()
     event_description = models.TextField(blank=True) 
-    comments = models.ManyToManyField(Comment)
 
     def __str__(self):
         return self.event_type + ' on ' + str(self.event_date) + ' for ' + self.family_member.first_name + ' ' + self.family_member.last_name  

@@ -1,5 +1,5 @@
 from django.urls import path
-from .views import Home, FamilyMemberList, FamilyMemberDetail, LifeEventListCreate, LifeEventDetail, CommentListCreate, CommentDetail, AddCommentToLifeEvent
+from .views import Home, FamilyMemberList, FamilyMemberDetail, LifeEventListCreate, LifeEventDetail, CommentListCreate, CommentDetail, AddCommentToLifeEvent, CreateUserView, LoginView, VerifyUserView
 
 urlpatterns = [
     path('', Home.as_view(), name='home'),
@@ -10,4 +10,11 @@ urlpatterns = [
     path('lifeevents/<int:life_event_id>/add_comment/<int:comment_id>/', AddCommentToLifeEvent.as_view(), name='add_comment_to_life_event'),
     path('comments/', CommentListCreate.as_view(), name='comment_list'),
     path('comments/<int:id>/', CommentDetail.as_view(), name='comment_detail'),
+
+    # user registration
+    path('users/register/', CreateUserView.as_view(), name='register'),
+    path('users/login/', LoginView.as_view(), name='login'),
+    path('users/token/refesh/', VerifyUserView.as_view(), name='refresh')
+
+
 ]
