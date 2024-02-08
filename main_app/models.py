@@ -6,7 +6,7 @@ EVENTS = (
     ('D', 'Death'),
     ('M', 'Marriage'),
     ('G', 'Graduation'),
-    ('M', 'Military Service'),
+    ('S', 'Military Service'),
     ('R', 'Relocation'),
     ('O', 'Other')
 )
